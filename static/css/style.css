@@ -1,0 +1,308 @@
+/* ==============================================================================
+   Student Management System - Custom Stylesheet
+   Modern, Clean, Professional Blue & White Theme
+   ============================================================================== */
+
+:root {
+  --sms-primary: #1e40af;       /* Deep Royal Blue */
+  --sms-primary-hover: #1d4ed8;
+  --sms-primary-light: #eff6ff; /* Soft Blue tint */
+  --sms-secondary: #0284c7;     /* Sky Cyan */
+  --sms-sidebar-bg: #0f172a;    /* Deep Slate Navy */
+  --sms-sidebar-text: #94a3b8;
+  --sms-sidebar-active: #38bdf8;
+  --sms-bg-body: #f8fafc;       /* Light Crisp Slate */
+  --sms-card-bg: #ffffff;
+  --sms-text-main: #1e293b;
+  --sms-text-muted: #64748b;
+  --sms-border-color: #e2e8f0;
+  --sms-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+  --sms-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  --sms-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background-color: var(--sms-bg-body);
+  color: var(--sms-text-main);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Sidebar Styling */
+#sidebar {
+  min-width: 260px;
+  max-width: 260px;
+  background-color: var(--sms-sidebar-bg);
+  min-height: 100vh;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1000;
+}
+
+#sidebar .sidebar-brand {
+  padding: 1.5rem 1.25rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+#sidebar .nav-link {
+  color: var(--sms-sidebar-text);
+  padding: 0.8rem 1.25rem;
+  font-weight: 500;
+  border-radius: 8px;
+  margin: 0.2rem 0.75rem;
+  display: flex;
+  align-items: center;
+  transition: all 0.2s ease;
+}
+
+#sidebar .nav-link i {
+  font-size: 1.2rem;
+  margin-right: 0.75rem;
+  width: 24px;
+  text-align: center;
+}
+
+#sidebar .nav-link:hover {
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.07);
+}
+
+#sidebar .nav-link.active {
+  color: #ffffff;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+}
+
+/* Main Content Area */
+#content {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Top Navbar */
+.top-navbar {
+  background-color: #ffffff;
+  border-bottom: 1px solid var(--sms-border-color);
+  padding: 0.85rem 1.75rem;
+  box-shadow: var(--sms-shadow-sm);
+}
+
+/* Metric / Summary Cards */
+.metric-card {
+  background-color: var(--sms-card-bg);
+  border: 1px solid var(--sms-border-color);
+  border-radius: 14px;
+  padding: 1.4rem;
+  box-shadow: var(--sms-shadow-sm);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.metric-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--sms-shadow-md);
+}
+
+.metric-icon-box {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+
+.metric-icon-blue {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+.metric-icon-green {
+  background-color: #dcfce7;
+  color: #15803d;
+}
+
+.metric-icon-purple {
+  background-color: #f3e8ff;
+  color: #7e22ce;
+}
+
+.metric-icon-amber {
+  background-color: #fef3c7;
+  color: #b45309;
+}
+
+/* Modern Card Container */
+.sms-card {
+  background-color: var(--sms-card-bg);
+  border: 1px solid var(--sms-border-color);
+  border-radius: 14px;
+  box-shadow: var(--sms-shadow-sm);
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+}
+
+.sms-card-header {
+  padding: 1.1rem 1.5rem;
+  background-color: #ffffff;
+  border-bottom: 1px solid var(--sms-border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sms-card-title {
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: var(--sms-text-main);
+  margin: 0;
+}
+
+/* Tables */
+.sms-table {
+  margin-bottom: 0;
+  vertical-align: middle;
+}
+
+.sms-table thead th {
+  background-color: #f8fafc;
+  color: #475569;
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--sms-border-color);
+}
+
+.sms-table tbody td {
+  padding: 0.95rem 1rem;
+  color: #334155;
+  border-bottom: 1px solid var(--sms-border-color);
+  font-size: 0.925rem;
+}
+
+.sms-table tbody tr:hover {
+  background-color: #f8faff;
+}
+
+/* Badges */
+.badge-id {
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  background-color: #e0f2fe;
+  color: #0369a1;
+  font-weight: 600;
+  padding: 0.35rem 0.6rem;
+  border-radius: 6px;
+  letter-spacing: 0.02em;
+}
+
+.badge-course {
+  background-color: #ede9fe;
+  color: #5b21b6;
+  font-weight: 500;
+  padding: 0.35rem 0.65rem;
+  border-radius: 6px;
+}
+
+/* Action Buttons */
+.btn-action {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  transition: all 0.15s ease;
+}
+
+.btn-action-view {
+  background-color: #eff6ff;
+  color: #2563eb;
+  border: 1px solid #bfdbfe;
+}
+.btn-action-view:hover {
+  background-color: #2563eb;
+  color: #ffffff;
+}
+
+.btn-action-edit {
+  background-color: #fefce8;
+  color: #ca8a04;
+  border: 1px solid #fef08a;
+}
+.btn-action-edit:hover {
+  background-color: #ca8a04;
+  color: #ffffff;
+}
+
+.btn-action-delete {
+  background-color: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+}
+.btn-action-delete:hover {
+  background-color: #dc2626;
+  color: #ffffff;
+}
+
+/* Buttons */
+.btn-primary {
+  background: linear-gradient(135deg, #1e40af, #2563eb);
+  border: none;
+  font-weight: 500;
+  padding: 0.55rem 1.25rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
+}
+.btn-primary:hover {
+  background: linear-gradient(135deg, #1d4ed8, #1e40af);
+  box-shadow: 0 4px 8px rgba(37, 99, 235, 0.3);
+}
+
+/* Authentication Pages */
+.auth-wrapper {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+}
+
+.auth-card {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.25), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  width: 100%;
+  max-width: 440px;
+  overflow: hidden;
+}
+
+.auth-header {
+  background: linear-gradient(135deg, #1e3a8a, #2563eb);
+  color: white;
+  padding: 2rem 1.75rem;
+  text-align: center;
+}
+
+.auth-body {
+  padding: 2rem 1.75rem;
+}
+
+/* Responsive Sidebar Toggle */
+@media (max-width: 991.98px) {
+  #sidebar {
+    margin-left: -260px;
+    position: fixed;
+    height: 100%;
+  }
+  #sidebar.show {
+    margin-left: 0;
+  }
+}

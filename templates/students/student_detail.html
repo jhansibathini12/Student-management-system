@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ student.full_name }} | Student Profile{% endblock %}
+{% block page_title %}Student Details{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-12 col-lg-9 col-xl-8">
+    <!-- Breadcrumb & Back navigation -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-0 small">
+          <li class="breadcrumb-item"><a href="{% url 'dashboard' %}" class="text-decoration-none">Dashboard</a></li>
+          <li class="breadcrumb-item"><a href="{% url 'student_list' %}" class="text-decoration-none">Students</a></li>
+          <li class="breadcrumb-item active" aria-current="page">{{ student.student_id }}</li>
+        </ol>
+      </nav>
+      <a href="{% url 'student_list' %}" class="btn btn-sm btn-outline-secondary">
+        <i class="bi bi-arrow-left me-1"></i> Back to Directory
+      </a>
+    </div>
+
+    <!-- Student Profile Card -->
+    <div class="sms-card">
+      <div class="p-4 bg-white border-bottom">
+        <div class="d-flex flex-column flex-sm-row align-items-sm-center justify-content-between gap-3">
+          <div class="d-flex align-items-center">
+            <div class="rounded-circle bg-primary bg-opacity-10 text-primary p-3 me-3 d-flex align-items-center justify-content-center" style="width: 64px; height: 64px;">
+              <i class="bi bi-person-fill fs-2"></i>
+            </div>
+            <div>
+              <div class="d-flex align-items-center gap-2 flex-wrap">
+                <h4 class="mb-0 fw-bold text-dark">{{ student.full_name }}</h4>
+                <span class="badge-id">{{ student.student_id }}</span>
+              </div>
+              <div class="mt-1">
+                <span class="badge-course me-2">{{ student.course }}</span>
+                {% if student.gender == 'Male' %}
+                  <span class="badge bg-primary bg-opacity-10 text-primary">Male</span>
+                {% elif student.gender == 'Female' %}
+                  <span class="badge bg-danger bg-opacity-10 text-danger">Female</span>
+                {% else %}
+                  <span class="badge bg-secondary bg-opacity-10 text-secondary">{{ student.gender }}</span>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Actions -->
+          <div class="d-flex gap-2">
+            <a href="{% url 'student_update' student.pk %}" class="btn btn-warning btn-sm d-flex align-items-center gap-1 text-white">
+              <i class="bi bi-pencil-square"></i>
+              <span>Edit</span>
+            </a>
+            <button type="button" class="btn btn-outline-danger btn-sm d-flex align-items-center gap-1"
+                    data-bs-toggle="modal"
+                    data-bs-target="#deleteConfirmModal"
+                    data-student-id="{{ student.student_id }}"
+                    data-student-name="{{ student.full_name }}"
+                    data-delete-url="{% url 'student_delete' student.pk %}">
+              <i class="bi bi-trash"></i>
+              <span>Delete</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Profile Information Grid -->
+      <div class="p-4 bg-white">
+        <div class="row g-4">
+          <!-- Contact & Academic -->
+          <div class="col-12 col-md-6">
+            <h6 class="text-uppercase text-secondary fw-bold small mb-3" style="letter-spacing: 0.05em;">
+              Contact Information
+            </h6>
+            <div class="mb-3">
+              <label class="text-muted small d-block mb-1">Email Address</label>
+              <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-envelope text-primary"></i>
+                <a href="mailto:{{ student.email }}" class="text-dark fw-medium text-decoration-none">
+                  {{ student.email }}
+                </a>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="text-muted small d-block mb-1">Phone Number</label>
+              <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-telephone text-primary"></i>
+                <span class="text-dark fw-medium">{{ student.phone }}</span>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="text-muted small d-block mb-1">Age</label>
+              <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-calendar-heart text-primary"></i>
+                <span class="text-dark fw-medium">{{ student.age }} years</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Academic & Location -->
+          <div class="col-12 col-md-6">
+            <h6 class="text-uppercase text-secondary fw-bold small mb-3" style="letter-spacing: 0.05em;">
+              Academic & Enrollment
+            </h6>
+            <div class="mb-3">
+              <label class="text-muted small d-block mb-1">Program / Course</label>
+              <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-book text-primary"></i>
+                <span class="text-dark fw-semibold">{{ student.course }}</span>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="text-muted small d-block mb-1">Date of Joining</label>
+              <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-calendar-check text-primary"></i>
+                <span class="text-dark fw-medium">{{ student.date_of_joining|date:"F d, Y" }}</span>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="text-muted small d-block mb-1">Residential Address</label>
+              <div class="d-flex align-items-start gap-2">
+                <i class="bi bi-geo-alt text-primary mt-1"></i>
+                <span class="text-dark fw-medium">{{ student.address }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Timestamps Footer -->
+        <hr class="my-4" />
+        <div class="row text-muted small">
+          <div class="col-sm-6 mb-1 mb-sm-0">
+            <i class="bi bi-clock-history me-1"></i>
+            Enrolled On: <strong>{{ student.created_at|date:"M d, Y H:i" }}</strong>
+          </div>
+          <div class="col-sm-6 text-sm-end">
+            <i class="bi bi-pencil me-1"></i>
+            Last Updated: <strong>{{ student.updated_at|date:"M d, Y H:i" }}</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

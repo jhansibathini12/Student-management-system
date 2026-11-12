@@ -1,0 +1,243 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard | Student Management System{% endblock %}
+{% block page_title %}Administrative Dashboard{% endblock %}
+
+{% block content %}
+<!-- Metric Cards Row -->
+<div class="row g-3 mb-4">
+  <!-- Total Students -->
+  <div class="col-12 col-sm-6 col-xl-3">
+    <div class="metric-card d-flex align-items-center">
+      <div class="metric-icon-box metric-icon-blue me-3">
+        <i class="bi bi-people-fill"></i>
+      </div>
+      <div>
+        <span class="text-muted small fw-medium text-uppercase d-block">Total Students</span>
+        <h3 class="fw-bold mb-0 text-dark">{{ total_students }}</h3>
+      </div>
+    </div>
+  </div>
+
+  <!-- Total Courses -->
+  <div class="col-12 col-sm-6 col-xl-3">
+    <div class="metric-card d-flex align-items-center">
+      <div class="metric-icon-box metric-icon-green me-3">
+        <i class="bi bi-book-half"></i>
+      </div>
+      <div>
+        <span class="text-muted small fw-medium text-uppercase d-block">Active Courses</span>
+        <h3 class="fw-bold mb-0 text-dark">{{ total_courses }}</h3>
+      </div>
+    </div>
+  </div>
+
+  <!-- Male Students -->
+  <div class="col-12 col-sm-6 col-xl-3">
+    <div class="metric-card d-flex align-items-center">
+      <div class="metric-icon-box metric-icon-purple me-3">
+        <i class="bi bi-gender-male"></i>
+      </div>
+      <div>
+        <span class="text-muted small fw-medium text-uppercase d-block">Male Enrolled</span>
+        <h3 class="fw-bold mb-0 text-dark">{{ male_count }}</h3>
+      </div>
+    </div>
+  </div>
+
+  <!-- Female Students -->
+  <div class="col-12 col-sm-6 col-xl-3">
+    <div class="metric-card d-flex align-items-center">
+      <div class="metric-icon-box metric-icon-amber me-3">
+        <i class="bi bi-gender-female"></i>
+      </div>
+      <div>
+        <span class="text-muted small fw-medium text-uppercase d-block">Female Enrolled</span>
+        <h3 class="fw-bold mb-0 text-dark">{{ female_count }}</h3>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4 mb-4">
+  <!-- Recently Added Students Widget -->
+  <div class="col-12 col-lg-5">
+    <div class="sms-card h-100">
+      <div class="sms-card-header">
+        <h6 class="sms-card-title d-flex align-items-center gap-2">
+          <i class="bi bi-clock-history text-primary"></i>
+          <span>Recently Added Students</span>
+        </h6>
+        <a href="{% url 'student_create' %}" class="btn btn-sm btn-outline-primary py-0 px-2" style="font-size: 0.8rem;">
+          <i class="bi bi-plus"></i> Add
+        </a>
+      </div>
+      <div class="p-3">
+        {% if recent_students %}
+          <div class="list-group list-group-flush">
+            {% for student in recent_students %}
+              <div class="list-group-item px-0 py-2 d-flex justify-content-between align-items-center border-bottom">
+                <div class="d-flex align-items-center">
+                  <div class="rounded-circle bg-primary bg-opacity-10 text-primary p-2 me-3 d-flex align-items-center justify-content-center" style="width: 38px; height: 38px;">
+                    <i class="bi bi-person-fill"></i>
+                  </div>
+                  <div>
+                    <a href="{% url 'student_detail' student.pk %}" class="fw-semibold text-dark text-decoration-none d-block">
+                      {{ student.full_name }}
+                    </a>
+                    <small class="text-muted">
+                      <span class="badge-id me-1" style="font-size: 0.72rem;">{{ student.student_id }}</span>
+                      &bull; {{ student.course }}
+                    </small>
+                  </div>
+                </div>
+                <div class="text-end">
+                  <span class="badge bg-light text-secondary border" style="font-size: 0.75rem;">
+                    {{ student.date_of_joining|date:"M d, Y" }}
+                  </span>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div class="text-center py-4 text-muted">
+            <i class="bi bi-inbox fs-2 d-block mb-2 text-secondary"></i>
+            No students registered yet.
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Course Distribution Breakdown -->
+  <div class="col-12 col-lg-7">
+    <div class="sms-card h-100">
+      <div class="sms-card-header">
+        <h6 class="sms-card-title d-flex align-items-center gap-2">
+          <i class="bi bi-pie-chart-fill text-primary"></i>
+          <span>Top Course Enrollments</span>
+        </h6>
+        <span class="badge bg-primary bg-opacity-10 text-primary fw-medium">Real-time</span>
+      </div>
+      <div class="p-3">
+        {% if course_stats %}
+          {% for item in course_stats %}
+            <div class="mb-3">
+              <div class="d-flex justify-content-between align-items-center mb-1">
+                <span class="fw-medium text-dark small">{{ item.course }}</span>
+                <span class="badge bg-light text-primary border small">{{ item.total }} students</span>
+              </div>
+              <div class="progress" style="height: 8px;">
+                <div class="progress-bar bg-primary" role="progressbar"
+                     style="width: {% widthratio item.total total_students 100 %}%;"
+                     aria-valuenow="{{ item.total }}" aria-valuemin="0" aria-valuemax="{{ total_students }}"></div>
+              </div>
+            </div>
+          {% endfor %}
+        {% else %}
+          <div class="text-center py-4 text-muted">
+            <i class="bi bi-bar-chart fs-2 d-block mb-2 text-secondary"></i>
+            No enrollment distribution data available.
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Student Records Table Card -->
+<div class="sms-card">
+  <div class="sms-card-header flex-wrap gap-2">
+    <div>
+      <h6 class="sms-card-title mb-0">Student Records Directory</h6>
+      <small class="text-muted">Showing latest 10 student enrollments. For full list and filtering, visit <a href="{% url 'student_list' %}" class="text-primary text-decoration-none">All Students</a>.</small>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+      <a href="{% url 'student_list' %}" class="btn btn-sm btn-outline-secondary">
+        <i class="bi bi-arrow-right-circle me-1"></i> View All ({{ total_students }})
+      </a>
+      <a href="{% url 'student_create' %}" class="btn btn-sm btn-primary">
+        <i class="bi bi-person-plus-fill me-1"></i> Add Student
+      </a>
+    </div>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table sms-table table-hover align-middle">
+      <thead>
+        <tr>
+          <th>Student ID</th>
+          <th>Full Name</th>
+          <th>Course</th>
+          <th>Email Address</th>
+          <th>Phone</th>
+          <th>Gender</th>
+          <th>Joining Date</th>
+          <th class="text-center">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for student in dashboard_students %}
+          <tr>
+            <td>
+              <span class="badge-id">{{ student.student_id }}</span>
+            </td>
+            <td>
+              <div class="fw-semibold text-dark">{{ student.full_name }}</div>
+              <small class="text-muted">{{ student.age }} years old</small>
+            </td>
+            <td>
+              <span class="badge-course">{{ student.course }}</span>
+            </td>
+            <td>
+              <a href="mailto:{{ student.email }}" class="text-secondary text-decoration-none">
+                {{ student.email }}
+              </a>
+            </td>
+            <td>{{ student.phone }}</td>
+            <td>
+              {% if student.gender == 'Male' %}
+                <span class="badge bg-primary bg-opacity-10 text-primary">Male</span>
+              {% elif student.gender == 'Female' %}
+                <span class="badge bg-danger bg-opacity-10 text-danger">Female</span>
+              {% else %}
+                <span class="badge bg-secondary bg-opacity-10 text-secondary">{{ student.gender }}</span>
+              {% endif %}
+            </td>
+            <td>{{ student.date_of_joining|date:"M d, Y" }}</td>
+            <td class="text-center">
+              <div class="d-inline-flex gap-1">
+                <!-- View -->
+                <a href="{% url 'student_detail' student.pk %}" class="btn-action btn-action-view" title="View Profile" data-bs-toggle="tooltip">
+                  <i class="bi bi-eye-fill"></i>
+                </a>
+                <!-- Edit -->
+                <a href="{% url 'student_update' student.pk %}" class="btn-action btn-action-edit" title="Edit Student" data-bs-toggle="tooltip">
+                  <i class="bi bi-pencil-fill"></i>
+                </a>
+                <!-- Delete -->
+                <button type="button" class="btn-action btn-action-delete"
+                        data-bs-toggle="modal"
+                        data-bs-target="#deleteConfirmModal"
+                        data-student-id="{{ student.student_id }}"
+                        data-student-name="{{ student.full_name }}"
+                        data-delete-url="{% url 'student_delete' student.pk %}"
+                        title="Delete Student">
+                  <i class="bi bi-trash-fill"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="8" class="text-center py-4 text-muted">
+              <i class="bi bi-people fs-2 d-block mb-2 text-secondary"></i>
+              No student records available yet. Click "Add Student" above to create the first record!
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

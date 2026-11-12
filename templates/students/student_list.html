@@ -1,0 +1,188 @@
+{% extends 'base.html' %}
+
+{% block title %}All Students | Student Management System{% endblock %}
+{% block page_title %}Student Directory{% endblock %}
+
+{% block content %}
+<div class="sms-card mb-4">
+  <div class="p-3 bg-white border-bottom">
+    <!-- Search & Filter Form -->
+    <form method="GET" action="{% url 'student_list' %}" class="row g-2 align-items-center">
+      <!-- Search Input -->
+      <div class="col-12 col-md-5">
+        <div class="input-group">
+          <span class="input-group-text bg-light text-muted"><i class="bi bi-search"></i></span>
+          <input type="text" name="q" value="{{ query }}" class="form-control" placeholder="Search by name, email, ID, or course..." />
+        </div>
+      </div>
+
+      <!-- Course Filter Dropdown -->
+      <div class="col-12 col-sm-6 col-md-4">
+        <div class="input-group">
+          <label class="input-group-text bg-light text-muted" for="courseFilter"><i class="bi bi-filter"></i></label>
+          <select name="course" id="courseFilter" class="form-select">
+            <option value="">All Courses</option>
+            {% for c in courses %}
+              <option value="{{ c }}" {% if course_filter == c %}selected{% endif %}>{{ c }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+
+      <!-- Submit & Reset Buttons -->
+      <div class="col-12 col-sm-6 col-md-3 d-flex gap-2">
+        <button type="submit" class="btn btn-primary flex-grow-1">
+          <i class="bi bi-funnel-fill me-1"></i> Filter
+        </button>
+        {% if query or course_filter %}
+          <a href="{% url 'student_list' %}" class="btn btn-outline-secondary" title="Clear Filters" data-bs-toggle="tooltip">
+            <i class="bi bi-x-circle"></i>
+          </a>
+        {% endif %}
+      </div>
+    </form>
+  </div>
+
+  <!-- Header with Counter and Add Button -->
+  <div class="sms-card-header bg-light">
+    <div class="d-flex align-items-center gap-2">
+      <span class="fw-semibold text-dark">Enrolled Students</span>
+      <span class="badge bg-primary rounded-pill">{{ total_count }} total</span>
+      {% if query or course_filter %}
+        <small class="text-muted">(filtered)</small>
+      {% endif %}
+    </div>
+    <a href="{% url 'student_create' %}" class="btn btn-sm btn-primary">
+      <i class="bi bi-person-plus-fill me-1"></i> Add Student
+    </a>
+  </div>
+
+  <!-- Students Table -->
+  <div class="table-responsive">
+    <table class="table sms-table table-hover align-middle mb-0">
+      <thead>
+        <tr>
+          <th>Student ID</th>
+          <th>Full Name</th>
+          <th>Course</th>
+          <th>Email Address</th>
+          <th>Phone</th>
+          <th>Age</th>
+          <th>Gender</th>
+          <th>Joining Date</th>
+          <th class="text-center">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for student in students %}
+          <tr>
+            <td>
+              <span class="badge-id">{{ student.student_id }}</span>
+            </td>
+            <td>
+              <a href="{% url 'student_detail' student.pk %}" class="fw-semibold text-dark text-decoration-none d-block">
+                {{ student.full_name }}
+              </a>
+            </td>
+            <td>
+              <span class="badge-course">{{ student.course }}</span>
+            </td>
+            <td>
+              <a href="mailto:{{ student.email }}" class="text-secondary text-decoration-none">
+                {{ student.email }}
+              </a>
+            </td>
+            <td>{{ student.phone }}</td>
+            <td>{{ student.age }}</td>
+            <td>
+              {% if student.gender == 'Male' %}
+                <span class="badge bg-primary bg-opacity-10 text-primary">Male</span>
+              {% elif student.gender == 'Female' %}
+                <span class="badge bg-danger bg-opacity-10 text-danger">Female</span>
+              {% else %}
+                <span class="badge bg-secondary bg-opacity-10 text-secondary">{{ student.gender }}</span>
+              {% endif %}
+            </td>
+            <td>{{ student.date_of_joining|date:"M d, Y" }}</td>
+            <td class="text-center">
+              <div class="d-inline-flex gap-1">
+                <!-- View -->
+                <a href="{% url 'student_detail' student.pk %}" class="btn-action btn-action-view" title="View Details" data-bs-toggle="tooltip">
+                  <i class="bi bi-eye-fill"></i>
+                </a>
+                <!-- Edit -->
+                <a href="{% url 'student_update' student.pk %}" class="btn-action btn-action-edit" title="Edit Student" data-bs-toggle="tooltip">
+                  <i class="bi bi-pencil-fill"></i>
+                </a>
+                <!-- Delete (Trigger Modal) -->
+                <button type="button" class="btn-action btn-action-delete"
+                        data-bs-toggle="modal"
+                        data-bs-target="#deleteConfirmModal"
+                        data-student-id="{{ student.student_id }}"
+                        data-student-name="{{ student.full_name }}"
+                        data-delete-url="{% url 'student_delete' student.pk %}"
+                        title="Delete Student">
+                  <i class="bi bi-trash-fill"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="9" class="text-center py-5 text-muted">
+              <i class="bi bi-search fs-2 d-block mb-2 text-secondary"></i>
+              No students found matching your criteria.
+              <div class="mt-2">
+                <a href="{% url 'student_list' %}" class="btn btn-sm btn-outline-primary me-2">Clear Filters</a>
+                <a href="{% url 'student_create' %}" class="btn btn-sm btn-primary">Add New Student</a>
+              </div>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination Controls -->
+  {% if page_obj.has_other_pages %}
+    <div class="p-3 bg-white border-top d-flex justify-content-between align-items-center flex-wrap gap-2">
+      <small class="text-muted">
+        Showing page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+      </small>
+      <nav aria-label="Page navigation">
+        <ul class="pagination pagination-sm mb-0">
+          {% if page_obj.has_previous %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if query %}&q={{ query }}{% endif %}{% if course_filter %}&course={{ course_filter }}{% endif %}" aria-label="Previous">
+                &laquo; Prev
+              </a>
+            </li>
+          {% else %}
+            <li class="page-item disabled"><span class="page-link">&laquo; Prev</span></li>
+          {% endif %}
+
+          {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+              <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{ num }}{% if query %}&q={{ query }}{% endif %}{% if course_filter %}&course={{ course_filter }}{% endif %}">{{ num }}</a>
+              </li>
+            {% endif %}
+          {% endfor %}
+
+          {% if page_obj.has_next %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if query %}&q={{ query }}{% endif %}{% if course_filter %}&course={{ course_filter }}{% endif %}" aria-label="Next">
+                Next &raquo;
+              </a>
+            </li>
+          {% else %}
+            <li class="page-item disabled"><span class="page-link">Next &raquo;</span></li>
+          {% endif %}
+        </ul>
+      </nav>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}
